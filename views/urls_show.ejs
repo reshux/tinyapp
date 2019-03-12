@@ -10,11 +10,11 @@
 </head>
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
-     <ul>
-     <% for (var url in templateVars) { %>
-       <li><%= url %> : <%= templateVars[url] %> </li>
-    <% }; %>
-  </ul>
-  <a href=# >URL Shortener</a>
+    <h1> TinyApp </h1>
+    <a href=# >Create New TinyURL</a>
+    <p>
+    <h2> TinyURL for <%= templateVars.longURL %> </h2>
+     <%= templateVars.shortURL %>
+
 </body>
 </html>
