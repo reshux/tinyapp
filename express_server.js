@@ -20,11 +20,14 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
   var templateVars = urlDatabase
-  // [
-  // {short: Object.keys(urlDatabase)[0], long: Object.values(urlDatabase)[0]},
-  // {short: Object.keys(urlDatabase)[1], long: Object.values(urlDatabase)[1]}
-  // ]
   res.render("urls_index", {
+    templateVars: templateVars
+  });
+});
+
+app.get("/urls/:shortURL", (req, res) => {
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  res.render("urls_show", {
     templateVars: templateVars
   });
 });
