@@ -10,7 +10,7 @@ var urlDatabase = {
 };
 
 function generateRandomString() {
-  return Math.random().toString(36).substring(2,6)
+  return Math.random().toString(36).substring(2,8)
 }
 
 app.set("view engine", "ejs")
@@ -47,8 +47,16 @@ app.get("/hello", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  var longURL = req.body.longURL;
+  var shortURL = generateRandomString()
+  urlDatabase[shortURL] = longURL
+  res.send("ok");         // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  var shortURL = req.params.shortURL
+  const longURL = urlDatabase[shortURL]
+  res.redirect(longURL);
 });
 
 app.listen(PORT, () => {
