@@ -7,10 +7,26 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.set("view engine", ejs)
+function urlParser(input){
+  var parsed = JSON.parse(input)
+  return parsed
+}
+
+app.set("view engine", "ejs")
 
 app.get("/", (req, res) => {
   res.send("Hello!");
+});
+
+app.get("/urls", (req, res) => {
+  var templateVars = urlDatabase
+  // [
+  // {short: Object.keys(urlDatabase)[0], long: Object.values(urlDatabase)[0]},
+  // {short: Object.keys(urlDatabase)[1], long: Object.values(urlDatabase)[1]}
+  // ]
+  res.render("urls_index", {
+    templateVars: templateVars
+  });
 });
 
 app.get("/urls.json", (req, res) => {
