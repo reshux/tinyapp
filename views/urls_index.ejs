@@ -11,15 +11,23 @@
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
     <% include partials/_header %>
-    <a href=# >Create New TinyURL</a>
+<a href="/urls/new" >Create New TinyURL</a>
     <p>
 
 <h2> My URLs </h2>
-  <ul>
-    <% for (var url in templateVars) { %>
-        <li><%= templateVars[url] %> - <%= url %></li>
-    <% }; %>
-  </ul>
-
+  <table style="width:100%">
+    <tbody>
+  <tr>
+    <td>
+      <ul>
+        <% for (var url in templateVars) { %>
+          <% var deleteURL = "/urls/" + url + "/delete" %>
+          <li><%= url %> - <%= templateVars[url] %> <form method="POST" action=<%= deleteURL %>><input type="submit" class="btn btn-primary" value="Delete"></form> </li>
+        <% }; %>
+      </ul>
+    </td>
+  </tr>
+</tbody>
+</table>
 </body>
 </html>

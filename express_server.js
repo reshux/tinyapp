@@ -50,13 +50,19 @@ app.post("/urls", (req, res) => {
   var longURL = req.body.longURL;
   var shortURL = generateRandomString()
   urlDatabase[shortURL] = longURL
-  res.send("ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls");         // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL
   const longURL = urlDatabase[shortURL]
   res.redirect(longURL);
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  var shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL]
+  res.redirect("/urls")
 });
 
 app.listen(PORT, () => {
