@@ -15,6 +15,18 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 // ShortURL generator function
 function generateRandomString() {
@@ -24,13 +36,34 @@ function generateRandomString() {
 // GET routes under here
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.redirect("/urls");
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = {
+    urlDatabase: urlDatabase,
+    users: users,
+    username: req.cookies["user ID"]
+  }
+  res.render("register", {
+    templateVars: templateVars
+  });
+});
+
+app.get("/login", (req, res) => {
+  let templateVars = {
+    users: users,
+    username: req.cookies["user ID"]}
+  res.render("login", {
+    templateVars: templateVars
+  });
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars ={
+  let templateVars = {
     urlDatabase: urlDatabase,
-    username: req.cookies["username"]
+    users: users,
+    username: req.cookies["user ID"]
   };
   res.render("urls_index", {
     templateVars: templateVars
@@ -38,8 +71,9 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars ={
-    username: req.cookies["username"]
+  let templateVars = {
+    users: users,
+    username: req.cookies["user ID"]
   };
   res.render("urls_new", {
     templateVars: templateVars
@@ -48,12 +82,14 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
+    users: users,
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    username: req.cookies["user ID"]
   };
   res.render("urls_show", {
-    templateVars: templateVars
+    templateVars: templateVars,
+    users: users
   });
 });
 
@@ -72,6 +108,27 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 // POST routes under here
+
+app.post("/register", (req, res) => {
+  let pWord = req.body.password
+  let userMail = req.body.email
+  let userID = generateRandomString()
+
+  for (var existing in users) {
+    if (userMail === users[existing]["email"]) {
+      res.send("E-mail already registered!");
+    }
+  }
+
+  users[userID] = {
+    id: userID,
+    email: userMail,
+    password: pWord
+  };
+
+  res.cookie("user ID", users[userID]["id"]);
+  res.redirect("/urls");
+  });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   var shortURL = req.params.shortURL;
@@ -93,13 +150,24 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let username = req.body.username;
-  res.cookie("username", username);
-  res.redirect("/urls");
+  let inputMail = req.body.email;
+  let inputPWord = req.body.password;
+
+  for (var existing in users) {
+    if (users[existing]["email"] == inputMail) {
+      if (users[existing]["password"] == inputPWord) {
+        res.cookie("user ID", users[existing]["id"])
+        return res.redirect("/urls");
+      } else {
+        return res.send("Wrong password!");
+      }
+    }
+  }
+  res.send("Your e-mail address is not registered");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user ID");
   res.redirect("/urls");
 });
 
