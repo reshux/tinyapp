@@ -9,20 +9,19 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-  <!-- Add EJS code here -->
   <% include partials/_header %>
   <p>
   <a href="/urls/new" >Create New TinyURL</a>
   <p>
   <h2> My URLs </h2>
     <ul>
-      <% for (var url in templateVars) { %>
+      <% for (var url in templateVars.urlDatabase) { %>
       <% var deleteURL = "/urls/" + url + "/delete" %>
       <% var editPath = "/urls/" + url %>
       <table style="width: 540px">
         <tr>
           <td style="width: 100px"> <%= url %></td>
-          <td style="width: 280px"> <a href= <%= templateVars[url] %> > <%= templateVars[url] %> </a></td>
+          <td style="width: 280px"> <a href= <%= templateVars.urlDatabase[url] %> > <%= templateVars.urlDatabase[url] %> </a></td>
           <td style="width: 80px"> <a href= <%= editPath %> > Edit</a></td>
           <td style="width: 80px"> <form class="form-inline" method="POST" action=<%= deleteURL %>><input type="submit" class="btn btn-primary" value="Delete"></form> </td>
         </tr>
