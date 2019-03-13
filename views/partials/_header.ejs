@@ -3,7 +3,7 @@
 <% if (templateVars.username) { %>
   <table style="width: 250px">
     <tr>
-      <td> Logged in as <%= templateVars.users[templateVars.username]["email"] %> </td>
+      <td> Logged in as <%= templateVars.users[templateVars.username].email %> </td>
       <td>
         <form class action="/logout" method="POST"><input type="submit" class="btn btn-primary" value="Logout"></form>
      </td>

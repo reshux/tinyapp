@@ -22,7 +22,7 @@
         <td style="width: 150px; text-align: center;">&nbsp;</td>
         </tr>
         <tr>
-        <td style="width: 440px; text-align: center;"><form action="/urls/<%= templateVars.shortURL%>" method="POST"><input class="form-control" name="longURL" type="text" placeholder=" <%= templateVars.longURL %> " ></td>
+        <td style="width: 440px; text-align: center;"><form action="/urls/<%= templateVars.shortURL%>?_method=PUT" method="POST"><input class="form-control" name="longURL" type="text" placeholder=" <%= templateVars.longURL %> " ></td>
         <td style="width: 160px; text-align: center;"><button class="btn btn-primary" type="submit">Update</button></td>
         </tr>
     </tbody>
