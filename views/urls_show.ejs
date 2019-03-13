@@ -11,10 +11,23 @@
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
     <% include partials/_header %>
-    <a href=# >Create New TinyURL</a>
+    <a href="/urls/new" >Create New TinyURL</a>
     <p>
-    <h2> TinyURL for <%= templateVars.longURL %> </h2>
-     <%= templateVars.shortURL %>
-
+    <div class="form-group mb-2">
+     <table style="width: 450px;">
+      <tbody>
+        <tr>
+        <td style="width: 300px; text-align: center;"><form action="/urls:shortURL" method="POST">
+        <h2 style="text-align: left;">Short URL: <%= templateVars.shortURL %> </h2>
+        </form></td>
+        <td style="width: 150px; text-align: center;">&nbsp;</td>
+        </tr>
+        <tr>
+        <td style="width: 440px; text-align: center;"><input class="form-control" name="longURL" type="text" placeholder=" <%= templateVars.longURL %> " ></td>
+        <td style="width: 160px; text-align: center;"><button class="btn btn-primary" type="submit">Update</button></td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
 </body>
 </html>
