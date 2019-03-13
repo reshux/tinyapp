@@ -10,9 +10,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser())
 app.set("view engine", "ejs")
 
-var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 const users = {
@@ -71,6 +71,9 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  if (!(req.cookies["user ID"])) {
+    res.redirect("/login");
+  }
   let templateVars = {
     users: users,
     username: req.cookies["user ID"]
@@ -84,7 +87,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     users: users,
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL]["longURL"],
     username: req.cookies["user ID"]
   };
   res.render("urls_show", {
@@ -103,7 +106,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL]["longURL"];
   res.redirect(longURL);
 });
 
@@ -132,20 +135,25 @@ app.post("/register", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   var shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL];
+   if (urlDatabase[req.params.shortURL]["userID"] === req.cookies["user ID"]) {
+    delete urlDatabase[req.params.shortURL];
+  }
   res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL]["longURL"] = req.body.longURL;
   res.redirect("/urls");
 });
 
 app.post("/urls", (req, res) => {
   var longURL = req.body.longURL;
   var shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = {
+    longURL: longURL,
+    userID: req.cookies["user ID"]
+  };
   res.redirect("/urls");
 });
 

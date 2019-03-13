@@ -11,22 +11,30 @@
 <body style="font-size:20px; padding:50px;">
   <% include partials/_header %>
   <p>
+    <% if (templateVars.username === undefined) { %>
+      To add/edit/remove links you need to login/register.
+    <% } else { %>
   <p>
   <h2> My URLs </h2>
     <ul>
       <% for (var url in templateVars.urlDatabase) { %>
+      <% if (templateVars.urlDatabase[url]["userID"] === templateVars.username) { %>
       <% var deleteURL = "/urls/" + url + "/delete" %>
       <% var editPath = "/urls/" + url %>
+      <% var myURL = url; %>
+      <% var link = templateVars.urlDatabase[url]["longURL"]  %>
       <table style="width: 540px">
         <tr>
-          <td style="width: 100px"> <%= url %></td>
-          <td style="width: 280px"> <a href= <%= templateVars.urlDatabase[url] %> > <%= templateVars.urlDatabase[url] %> </a></td>
+          <td style="width: 100px"> <%= myURL %></td>
+          <td style="width: 280px"> <a href= <%= link %> > <%= link %> </a></td>
           <td style="width: 80px"> <a href= <%= editPath %> > Edit</a></td>
           <td style="width: 80px"> <form class="form-inline" method="POST" action=<%= deleteURL %>><input type="submit" class="btn btn-primary" value="Delete"></form> </td>
         </tr>
         <p>
       </table>
+      <% } %>
       <% }; %>
+      <% } %>
     </ul>
   </td>
 </tr>
