@@ -1,8 +1,9 @@
 <header> <h1> TinyApp </h1> </header>
+<a href="/urls/new">New TinyURL</a> | <a href="/urls/">My URLs</a>
 <% if (templateVars.username) { %>
   <table style="width: 250px">
     <tr>
-      <td> Logged in as <%= templateVars.username %> </td>
+      <td> Logged in as <%= templateVars.users[templateVars.username]["email"] %> </td>
       <td>
         <form class action="/logout" method="POST"><input type="submit" class="btn btn-primary" value="Logout"></form>
      </td>
@@ -13,11 +14,13 @@
   <%= templateVars.username %>
     <tr>
       <td>
-        <form action="/login" method="POST"><input class="form-control" name="username" type="text" placeholder="username" />
+        <a href="/login">Login</a>
       </td>
       <td>
-        <form class action="/login" method="POST"><input type="submit" class="btn btn-primary" value="Login"></form>
+        <a href="/register">Register</a>
      </td>
+     <td>
+
     </tr>
   </table>
    <% } %>
