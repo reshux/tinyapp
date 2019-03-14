@@ -87,8 +87,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {
-    users: users,
+  let templateVars = {        /// send this data to be able to view user specific true URL &
+    users: users,             /// fill in forms with right placeholder texts.
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL]["longURL"],
     username: req.session["user ID"]
@@ -99,11 +99,11 @@ app.get("/urls/:shortURL", (req, res) => {
   });
 });
 
-app.get("/urls.json", (req, res) => {
+app.get("/urls.json", (req, res) => {       /// extract URL database under JSON format
   res.json(urlDatabase);
 });
 
-app.get("/u/:shortURL", (req, res) => {
+app.get("/u/:shortURL", (req, res) => {        /// short URL redirect. Accessible to public not only to user
   var shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]["longURL"];
   res.redirect(longURL);
@@ -112,28 +112,28 @@ app.get("/u/:shortURL", (req, res) => {
 // POST routes under here
 
 app.post("/register", (req, res) => {
-  let pWord = req.body.password
+  let pWord = req.body.password       /// read from form input
   let userMail = req.body.email
   let userID = generateRandomString()
   const hashedPassword = bcrypt.hashSync(pWord, 10);
 
-  for (var existing in users) {
+  for (var existing in users) {        ///  check in user base to see if the e-mail already registered
     if (userMail === users[existing]["email"]) {
-      res.send("E-mail already registered!");
+      res.send("E-mail already registered!");     /// throw error if true
     }
   }
 
-  users[userID] = {
+  users[userID] = {       /// create user and add it to user database object
     id: userID,
     email: userMail,
     password: hashedPassword
   };
 
-  req.session["user ID"] = users[userID]["id"];
+  req.session["user ID"] = users[userID]["id"];    ///  cookie session created
   res.redirect("/urls");
   });
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.post("/urls/:shortURL/delete", (req, res) => {    /// deleting a saved short URL - long URL binding for given user
   var shortURL = req.params.shortURL;
    if (urlDatabase[req.params.shortURL]["userID"] === req.session["user ID"]) {
     delete urlDatabase[req.params.shortURL];
@@ -152,16 +152,16 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 // this replaces the commented out POST route above. Using method-override package
 app.put("/urls/:shortURL", (req, res) => {
   let shortURL = req.params.shortURL
-  if (urlDatabase[shortURL]["userID"] === req.session["user ID"]) {
+  if (urlDatabase[shortURL]["userID"] === req.session["user ID"]) {    /// updating long URL for a given short URL
     urlDatabase[shortURL]["longURL"] = req.body.longURL
   }
   res.redirect("/urls");
 })
 
 app.post("/urls", (req, res) => {
-  var longURL = req.body.longURL;
-  var shortURL = generateRandomString();
-  urlDatabase[shortURL] = {
+  var longURL = req.body.longURL;     /// get the long URL
+  var shortURL = generateRandomString();    /// generate a short URL
+  urlDatabase[shortURL] = {     /// bind them together in an object with appropiate user ID
     longURL: longURL,
     userID: req.session["user ID"]
   };
@@ -169,10 +169,10 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let inputMail = req.body.email;
+  let inputMail = req.body.email;         /// get the form information for user e-mail and password
   let inputPWord = req.body.password;
 
-  for (var existing in users) {
+  for (var existing in users) {      //// check user database
     if (users[existing]["email"] == inputMail) {
       if (bcrypt.compareSync(inputPWord, users[existing]["password"])) {     //// hash sync compare using bcrypt
         req.session["user ID"] = users[existing]["id"]
