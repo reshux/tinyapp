@@ -32,6 +32,9 @@ function generateRandomString() {
 // GET routes under here
 
 app.get("/", (req, res) => {
+  if (!(req.session["user ID"])) {
+    res.redirect("/login");
+  }
   res.redirect("/urls");  /// urls acts as a homepage
 });
 
