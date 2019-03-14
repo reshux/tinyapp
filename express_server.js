@@ -1,7 +1,7 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 // const cookieSession = require('cookie-session');
-var PORT = 8080; // default port 8080
+const PORT = 8080; // default port 8080
 const cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
@@ -104,7 +104,7 @@ app.get("/urls.json", (req, res) => {       /// extract URL database under JSON 
 });
 
 app.get("/u/:shortURL", (req, res) => {        /// short URL redirect. Accessible to public not only to user
-  var shortURL = req.params.shortURL;
+  let shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]["longURL"];
   res.redirect(longURL);
 });
@@ -134,7 +134,7 @@ app.post("/register", (req, res) => {
   });
 
 app.post("/urls/:shortURL/delete", (req, res) => {    /// deleting a saved short URL - long URL binding for given user
-  var shortURL = req.params.shortURL;
+  let shortURL = req.params.shortURL;
    if (urlDatabase[req.params.shortURL]["userID"] === req.session["user ID"]) {
     delete urlDatabase[req.params.shortURL];
     /// using JS in-built delete command. I could use DELETE with method override package
