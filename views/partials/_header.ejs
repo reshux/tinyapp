@@ -1,7 +1,10 @@
-<header> <h1> TinyApp </h1> </header>
-<a href="/urls/new">New TinyURL</a> | <a href="/urls/">My URLs</a>
-<% if (templateVars.username) { %>
-  <table style="width: 250px">
+<div class="jumbotron">
+  <h1 class="display-4">TinyApp</h1>
+  <p class="lead">The tiny URL shortener. <a href="/urls/new">New TinyURL</a> | <a href="/urls/">My URLs</a></p>
+  <hr class="my-4">
+  <p>
+  <% if (templateVars.username) { %>
+  <table style="width: 550px">
     <tr>
       <td> Logged in as <%= templateVars.users[templateVars.username].email %> </td>
       <td>
@@ -22,5 +25,6 @@
      <td>
     </tr>
   </table>
-   <% } %>
-  <p>
+   <% } %></p>
+</div>
+
