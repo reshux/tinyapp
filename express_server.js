@@ -18,7 +18,9 @@ app.use(cookieSession({
 app.set("view engine", "ejs")
 
 
-//
+// Empty URL database and user storage object
+// A fun stretch would be to store these in a text file using .fs writestreams and readstreams
+// this way, I wouldn't lose user and URL data when I turn the server off
 
 const urlDatabase = {};
 
@@ -33,7 +35,7 @@ function generateRandomString() {
 
 app.get("/", (req, res) => {
   if (!(req.session["user ID"])) {
-    res.redirect("/login");
+    res.redirect("/login");  /// redirect user to login page if not logged in
   }
   res.redirect("/urls");  /// urls acts as a homepage
 });
@@ -44,7 +46,7 @@ app.get("/register", (req, res) => {
   let templateVars = {
     urlDatabase: urlDatabase,
     users: users,
-    username: req.session["user ID"]
+    username: req.session["user ID"]   /// tepmlatevars is extracted here too, because headers partials uses it
   }
   res.render("register", {
     templateVars: templateVars
@@ -56,7 +58,7 @@ app.get("/login", (req, res) => {
     users: users,
     username: req.session["user ID"]}
   res.render("login", {
-    templateVars: templateVars
+    templateVars: templateVars   /// tepmlatevars is extracted here too, because headers partials uses it
   });
 });
 
@@ -64,7 +66,7 @@ app.get("/urls", (req, res) => {
   let templateVars = {
     urlDatabase: urlDatabase,
     users: users,
-    username: req.session["user ID"]
+    username: req.session["user ID"]  /// tepmlatevars is extracted here too, because headers partials uses it
   };
   res.render("urls_index", {
     templateVars: templateVars
@@ -73,7 +75,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   if (!(req.session["user ID"])) {
-    res.redirect("/login");
+    res.redirect("/login");       /// redirect user to login page if not logged in
   }
   let templateVars = {
     users: users,
@@ -135,6 +137,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   var shortURL = req.params.shortURL;
    if (urlDatabase[req.params.shortURL]["userID"] === req.session["user ID"]) {
     delete urlDatabase[req.params.shortURL];
+    /// using JS in-built delete command. I could use DELETE with method override package
   }
   res.redirect("/urls");
 });
@@ -175,11 +178,11 @@ app.post("/login", (req, res) => {
         req.session["user ID"] = users[existing]["id"]
         return res.redirect("/urls");
       } else {
-        return res.send("Wrong password!");
+        return res.send("Wrong password!");    /// wrong password error page
       }
     }
   }
-  res.send("Your e-mail address is not registered");
+  res.send("Your e-mail address is not registered");    /// For when a user tries to login without registering
 });
 
 app.post("/logout", (req, res) => {
