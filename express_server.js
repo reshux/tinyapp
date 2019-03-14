@@ -38,13 +38,13 @@ function generateRandomString() {
 
 app.get("/", (req, res) => {
   if (!req.session["user ID"]) {
-    res.redirect("/login"); /// redirect user to login page if not logged in
+    return res.redirect("/login"); /// redirect user to login page if not logged in
   }
   res.redirect("/urls"); /// urls acts as a homepage
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = {
+  const templateVars = {
     urlDatabase: urlDatabase,
     username: req.session["user ID"] /// tepmlatevars is extracted here too, because headers partials uses it
   };
@@ -54,7 +54,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = {
+  const templateVars = {
     users: users,
     username: req.session["user ID"]
   };
@@ -67,7 +67,7 @@ app.get("/urls", (req, res) => {
   if (!req.session["user ID"]) {
     res.redirect("/login"); /// redirect user to login page if not logged in
   }
-  let templateVars = {
+  const templateVars = {
     urlDatabase: urlDatabase,
     users: users,
     username: req.session["user ID"] /// tepmlatevars is extracted here too, because headers partials uses it
@@ -79,9 +79,9 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   if (!req.session["user ID"]) {
-    res.redirect("/login"); /// redirect user to login page if not logged in
+    res.redirect("/login");
   }
-  let templateVars = {
+  const templateVars = {
     users: users,
     username: req.session["user ID"]
   };
@@ -91,7 +91,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = {
+  const templateVars = {
     /// send this data to be able to view user specific true URL &
     users: users, /// fill in forms with right placeholder texts.
     shortURL: req.params.shortURL,
@@ -111,7 +111,7 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   /// short URL redirect. Accessible to public not only to user
-  let shortURL = req.params.shortURL;
+  const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]["longURL"];
   res.redirect(longURL);
 });
@@ -144,7 +144,7 @@ app.post("/register", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   /// deleting a saved short URL - long URL binding for given user
-  let shortURL = req.params.shortURL;
+  const shortURL = req.params.shortURL;
   if (urlDatabase[req.params.shortURL]["userID"] === req.session["user ID"]) {
     delete urlDatabase[req.params.shortURL];
     /// using JS in-built delete command. I could use DELETE with method override package
@@ -152,15 +152,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-// app.post("/urls/:shortURL", (req, res) => {
-//   var shortURL = req.params.shortURL;
-//   urlDatabase[shortURL]["longURL"] = req.body.longURL;
-//   res.redirect("/urls");
-// });
-
-// this replaces the commented out POST route above. Using method-override package
+/// Using method-override package
 app.put("/urls/:shortURL", (req, res) => {
-  let shortURL = req.params.shortURL;
+  const shortURL = req.params.shortURL;
   if (urlDatabase[shortURL]["userID"] === req.session["user ID"]) {
     /// updating long URL for a given short URL
     urlDatabase[shortURL]["longURL"] = req.body.longURL;
@@ -180,8 +174,8 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let inputMail = req.body.email; /// get the form information for user e-mail and password
-  let inputPWord = req.body.password;
+  const inputMail = req.body.email; /// get the form information for user e-mail and password
+  const inputPWord = req.body.password;
   checkDatabase(inputMail, inputPWord);
 
   for (var existing in users) {
