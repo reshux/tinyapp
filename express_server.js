@@ -20,23 +20,9 @@ app.set("view engine", "ejs")
 
 //
 
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
-};
+const urlDatabase = {};
 
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
-}
+const users = {}
 
 // ShortURL generator function
 function generateRandomString() {
@@ -46,8 +32,10 @@ function generateRandomString() {
 // GET routes under here
 
 app.get("/", (req, res) => {
-  res.redirect("/urls");
+  res.redirect("/urls");  /// urls acts as a homepage
 });
+
+
 
 app.get("/register", (req, res) => {
   let templateVars = {
@@ -110,10 +98,6 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]["longURL"];
@@ -158,6 +142,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //   res.redirect("/urls");
 // });
 
+
+// this replaces the commented out POST route above. Using method-override package
 app.put("/urls/:shortURL", (req, res) => {
   let shortURL = req.params.shortURL
   if (urlDatabase[shortURL]["userID"] === req.session["user ID"]) {
@@ -165,9 +151,6 @@ app.put("/urls/:shortURL", (req, res) => {
   }
   res.redirect("/urls");
 })
-
-
-
 
 app.post("/urls", (req, res) => {
   var longURL = req.body.longURL;
@@ -185,7 +168,7 @@ app.post("/login", (req, res) => {
 
   for (var existing in users) {
     if (users[existing]["email"] == inputMail) {
-      if (bcrypt.compareSync(inputPWord, users[existing]["password"])) {
+      if (bcrypt.compareSync(inputPWord, users[existing]["password"])) {     //// hash sync compare using bcrypt
         req.session["user ID"] = users[existing]["id"]
         return res.redirect("/urls");
       } else {
@@ -197,8 +180,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("session");
-  res.redirect("/urls");
+  res.clearCookie("session");   //// session deleted
+  res.redirect("/urls");      //// back to homepage
 });
 
 // server listening on PORT
