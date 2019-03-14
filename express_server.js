@@ -65,6 +65,9 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  if (!req.session["user ID"]) {
+    res.redirect("/login"); /// redirect user to login page if not logged in
+  }
   let templateVars = {
     urlDatabase: urlDatabase,
     users: users,
@@ -180,10 +183,11 @@ app.post("/urls", (req, res) => {
 app.post("/login", (req, res) => {
   let inputMail = req.body.email; /// get the form information for user e-mail and password
   let inputPWord = req.body.password;
+  checkDatabase(inputMail, inputPWord);
 
   for (var existing in users) {
     //// check user database
-    if (users[existing]["email"] == inputMail) {
+    if (users[existing]["email"] === inputMail) {
       if (bcrypt.compareSync(inputPWord, users[existing]["password"])) {
         //// hash sync compare using bcrypt
         req.session["user ID"] = users[existing]["id"];
