@@ -46,7 +46,6 @@ app.get("/", (req, res) => {
 app.get("/register", (req, res) => {
   let templateVars = {
     urlDatabase: urlDatabase,
-    users: users,
     username: req.session["user ID"] /// tepmlatevars is extracted here too, because headers partials uses it
   };
   res.render("register", {
